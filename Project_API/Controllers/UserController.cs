@@ -43,10 +43,11 @@ namespace Project_API.Controllers
         {
 
 
-          // if(_userRepos.IsValidPassword(userDto.Password))
+           // if(_userRepos.IsValidPassword(userDto.Password))
+                bool ifUserNmeUnique = await _userRepos.IsUniqueUser(userDto.Email);
 
 
-            bool ifUserNmeUnique =await _userRepos.IsUniqueUser(userDto.Email);
+
             if (!ifUserNmeUnique)
             {
                 return BadRequest(new { message = " you are already registred" });

@@ -79,16 +79,17 @@ namespace Project_API.Repository
             }
             else
                 throw new ArgumentException("Wallet not found for the user.");
-            
         }
 
-        public async Task Withdraw(int walletId, double amount)
+        public async Task Withdraw(int userId, double amount)
         {
-            var wallet =await _db.Wallets.FirstOrDefaultAsync(u => u.WalletId == walletId);
+            var wallet = await _db.Wallets.ToListAsync();
+            var userWallets = wallet.Where(z => z.UserId == userId).ToList();
+            var stableCoin = userWallets.Where(z => z.CoinId == 3).FirstOrDefault();
 
             if (wallet != null)
             {
-                wallet.Balance =wallet.Balance - amount;
+                stableCoin.Balance = stableCoin.Balance - amount;
                 await Save();
             }
             else
@@ -116,5 +117,8 @@ namespace Project_API.Repository
             _db.Wallets.Update(wallet);
             return  await Save();
         }
+
+
+
     }
 }
