@@ -49,24 +49,6 @@ namespace Project_API.Controllers
             //return CreatedAtRoute("GetNationalPark", new { walletkId = walletkobj.WalletId }, walletkobj);
             return Ok();
         }
-       /* [AllowAnonymous]
-        [HttpPatch]
-        public IActionResult UpdateWallet(int walletId, [FromBody] WalletDto walletDto)
-        {
-            if (walletDto == null || walletId != walletDto.WalletId)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var walletobj = _mapper.Map<Wallet>(walletDto);
-
-            if (!_walRepo.UpdateWallet(walletobj))
-            {
-                ModelState.AddModelError("", $"something went wrong when updating the record {walletobj.Balance}");
-                return StatusCode(500, ModelState);
-            }
-            return NoContent();
-        */
 
         [AllowAnonymous]
         [HttpPatch("Buy")]
@@ -86,11 +68,29 @@ namespace Project_API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPatch("Convet")]
-        public async Task<IActionResult> Convert([FromBody] SellDto sellDto)
+        [HttpPatch("Deposit")]
+        public async Task<IActionResult> Deposite([FromBody] WalletDto walletDto)
         {
 
-            await _walRepo.Sell(sellDto.WalletId, sellDto.Amount);
+            await _walRepo.Deposit(walletDto.UserId, walletDto.Amount);
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpPatch("Withdraw")]
+        public async Task<IActionResult> Withdraw([FromBody] WalletDto walletDto)
+        {
+
+            await _walRepo.Withdraw(walletDto.WalletId, walletDto.Amount);
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpPatch("Convet")]
+        public async Task<IActionResult> Convert([FromBody] ConvertDto convertDto)
+        {
+
+            await _walRepo.Convert(convertDto.FromCoinId, convertDto.ToCoinId,convertDto.WalletId);
             return Ok();
         }
     }

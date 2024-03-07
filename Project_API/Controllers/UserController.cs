@@ -14,11 +14,13 @@ namespace Project_API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepos;
+        private readonly IWalletRepository _WalletRepos;
         private readonly IMapper _mapper;
 
-        public UserController(IUserRepository userRepos,IMapper mapper)
+        public UserController(IUserRepository userRepos, IWalletRepository WalletRepos, IMapper mapper)
         {
             _userRepos = userRepos;
+            _WalletRepos = WalletRepos;
             _mapper = mapper;
         }
 
@@ -52,6 +54,13 @@ namespace Project_API.Controllers
             var userobj = _mapper.Map<User>(userDto);
 
             var user =await _userRepos.Register(userobj);
+            var createdWallet = new Wallet()
+            {
+                UserId = user.UserId,
+                Balance = 0,
+                CoinId = 3
+            };
+            var wallet = await _WalletRepos.CreateWallet(createdWallet);
 
             if (user == null)
             {

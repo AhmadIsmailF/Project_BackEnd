@@ -28,7 +28,7 @@ namespace Project_API.Repository
             if (wallet != null)
             {
                 wallet.Balance += amount;
-                Save();
+                await Save();
             }
             else
                 throw new ArgumentException("Wallet not found for the user.");
@@ -54,7 +54,7 @@ namespace Project_API.Repository
 
             var wallet =await _db.Wallets.FirstOrDefaultAsync(u=>u.WalletId==walletId);
             var coin = await _db.Coins.FirstOrDefaultAsync(x => x.CoinId == wallet.CoinId);
-            ////var rate = coin.CurrentPrice
+            //var rate = coin.CurrentPrice/
 
 
             if ( coin.Name == "Bitcoin")
@@ -62,17 +62,20 @@ namespace Project_API.Repository
 
             if (coin.Name == "Ethereum")
                 toCoin2 =coin.CurrentPrice / 17.5;
+            await Save();
 
         }
 
-        public async Task Deposit(int walletId, double amount)
+        public async Task Deposit(int userId, double amount)
         {
-            var wallet = await _db.Wallets.FirstOrDefaultAsync(u => u.WalletId == walletId);
+            var wallet = await _db.Wallets.ToListAsync();
+            var userWallets=wallet.Where(z=>z.UserId == userId).ToList();
+            var stableCoin=userWallets.Where(z=>z.CoinId == 3).FirstOrDefault();
 
             if (wallet != null)
             {
-                wallet.Balance += amount;
-                Save();
+                stableCoin.Balance += amount;
+                await Save();
             }
             else
                 throw new ArgumentException("Wallet not found for the user.");
@@ -85,8 +88,8 @@ namespace Project_API.Repository
 
             if (wallet != null)
             {
-                wallet.Balance -= amount;
-                Save();
+                wallet.Balance =wallet.Balance - amount;
+                await Save();
             }
             else
                 throw new ArgumentException("Wallet not found for the user.");
