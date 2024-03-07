@@ -47,21 +47,28 @@ namespace Project_API.Repository
                 throw new ArgumentException("Wallet not found for the user.");
         }
 
-        public async Task Convert(double fromCoin1, double toCoin2, int walletId)
+        public async Task Convert(int Coin1Id, int Coin2Id, double Amount, int userId)
         {
-            //var bitCoin = 66958;
-            //var ethureum = 3874;
+            var wallet = await _db.Wallets.ToListAsync();
+            var userWallets = wallet.Where(z => z.UserId == userId).ToList();
+            var coinFrom = wallet.SingleOrDefault(z => z.CoinId == Coin1Id);
+            var coinTo = wallet.SingleOrDefault(z => z.CoinId == Coin2Id);
 
-            var wallet =await _db.Wallets.FirstOrDefaultAsync(u=>u.WalletId==walletId);
-            var coin = await _db.Coins.FirstOrDefaultAsync(x => x.CoinId == wallet.CoinId);
-            //var rate = coin.CurrentPrice/
+            var coin1 = await _db.Coins.FirstOrDefaultAsync(z => z.CoinId == Coin1Id);
+            var coin2 = await _db.Coins.FirstOrDefaultAsync(z => z.CoinId == Coin2Id);
+            var rate = coin1.CurrentPrice / coin2.CurrentPrice;
+            if (Coin1Id ==1)
+            {
+                coinFrom.Balance = coinFrom.Balance - Amount;
+                coinTo.Balance = coinTo.Balance + Amount * rate;
+            }
 
-
-            if ( coin.Name == "Bitcoin")
-                toCoin2 =coin.CurrentPrice * 17.5;
-
-            if (coin.Name == "Ethereum")
-                toCoin2 =coin.CurrentPrice / 17.5;
+            if (Coin2Id ==2) 
+            {
+                coinFrom.Balance = coinFrom.Balance - Amount;
+                coinTo.Balance = coinTo.Balance + Amount / rate;
+            }
+             
             await Save();
 
         }

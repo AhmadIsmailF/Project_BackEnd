@@ -3,8 +3,9 @@
     public class ConvertDto
     {
         public int WalletId { get; set; }
-        public int FromCoinId { get; set; }
+        public int Coin1Id { get; set; }
+        public int Coin2Id { get; set; }
         public double Amount { get; set; }
-        public int ToCoinId { get; set; }
+        public int userId { get; set; }
     }
 }

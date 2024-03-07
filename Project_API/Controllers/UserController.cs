@@ -41,10 +41,11 @@ namespace Project_API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserDto userDto)
         {
+            bool ifUserNmeUnique=false;
 
 
-           // if(_userRepos.IsValidPassword(userDto.Password))
-                bool ifUserNmeUnique = await _userRepos.IsUniqueUser(userDto.Email);
+            if (_userRepos.IsValidPassword(userDto.Password))
+                ifUserNmeUnique = await _userRepos.IsUniqueUser(userDto.Email);
 
 
 
@@ -67,6 +68,7 @@ namespace Project_API.Controllers
             {
                 return BadRequest(new { message = "Error while registration" });
             }
+
             return Ok();
         }
     }

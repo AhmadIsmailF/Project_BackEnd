@@ -10,7 +10,7 @@ namespace Project_API.Repository.IRepository
         Task Withdraw(int walletId,double amount);
         Task Buy(int walletId, double amount);
         Task Sell(int walletId, double amount);
-        Task Convert(double fromCoin1,double toCoin2,int coinId);
+        Task Convert(int Coin1Id,int Coin2Id,double Amount,int userId);
         bool WalletExists(int id);
         Task<bool> CreateWallet(Wallet wallet);
         Task<bool> UpdateWallet(Wallet wallet);

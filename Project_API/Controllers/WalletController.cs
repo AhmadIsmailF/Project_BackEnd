@@ -86,11 +86,11 @@ namespace Project_API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPatch("Convet")]
+        [HttpPatch("Convert")]
         public async Task<IActionResult> Convert([FromBody] ConvertDto convertDto)
         {
 
-            await _walRepo.Convert(convertDto.FromCoinId, convertDto.ToCoinId,convertDto.WalletId);
+            await _walRepo.Convert(convertDto.Coin1Id, convertDto.Coin2Id,convertDto.Amount,convertDto.userId);
             return Ok();
         }
     }
