@@ -56,19 +56,20 @@ namespace Project_API.Repository
 
             var coin1 = await _db.Coins.FirstOrDefaultAsync(z => z.CoinId == Coin1Id);
             var coin2 = await _db.Coins.FirstOrDefaultAsync(z => z.CoinId == Coin2Id);
-            var rate = coin1.CurrentPrice / coin2.CurrentPrice;
-            if (Coin1Id ==1)
+           // var rate = coin1.CurrentPrice / coin2.CurrentPrice;
+            if (Coin1Id == 1)
             {
                 coinFrom.Balance = coinFrom.Balance - Amount;
-                coinTo.Balance = coinTo.Balance + Amount * rate;
+                coinTo.Balance = coinTo.Balance + Amount * 17;
+
             }
 
-            if (Coin2Id ==2) 
+            if (Coin1Id == 2) 
             {
                 coinFrom.Balance = coinFrom.Balance - Amount;
-                coinTo.Balance = coinTo.Balance + Amount / rate;
+                coinTo.Balance = coinTo.Balance + (Amount / 17);
             }
-             
+            
             await Save();
 
         }
