@@ -57,22 +57,26 @@ namespace Project_API.Repository
         {
             var wallet = await _db.Wallets.ToListAsync();
             var userWallets = wallet.Where(z => z.UserId == userId).ToList();
-            var coinFrom = wallet.SingleOrDefault(z => z.CoinId == Coin1Id);
-            var coinTo = wallet.SingleOrDefault(z => z.CoinId == Coin2Id);
+            var coinFrom = wallet.FirstOrDefault(z => z.CoinId == Coin1Id);//
+            var coinTo = wallet.FirstOrDefault(z => z.CoinId == Coin2Id);//
 
             var coin1 = await _db.Coins.FirstOrDefaultAsync(z => z.CoinId == Coin1Id);
             var coin2 = await _db.Coins.FirstOrDefaultAsync(z => z.CoinId == Coin2Id);
-           // var rate = coin1.CurrentPrice / coin2.CurrentPrice;
+
+            var coinbit = await _db.Coins.FirstOrDefaultAsync(z => z.CoinId == 1);
+            var coineth = await _db.Coins.FirstOrDefaultAsync(z => z.CoinId == 3);
+            var rate = coinbit.CurrentPrice / coineth.CurrentPrice;
+
             if (Coin1Id == 1)
             {
                 coinFrom.Balance = coinFrom.Balance - Amount;
-                coinTo.Balance = coinTo.Balance + Amount * 17;
+                coinTo.Balance = coinTo.Balance + Amount * rate;
             }
 
-            if (Coin1Id == 2) 
+            if (Coin1Id == 3) 
             {
                 coinFrom.Balance = coinFrom.Balance - Amount;
-                coinTo.Balance = coinTo.Balance + (Amount / 17);
+                coinTo.Balance = coinTo.Balance + (Amount / rate);
             }
             
             await Save();
