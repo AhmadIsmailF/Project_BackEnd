@@ -8,5 +8,6 @@ namespace Project_API.Repository.IRepository
         Task<User> Authenticate(string email, string password);
         Task<User> Register(User user);
         bool IsValidPassword(string password);
+        ICollection<User> GetUsers();
     }
 }

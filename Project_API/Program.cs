@@ -22,6 +22,8 @@ builder.Services.AddDbContext<ApplicationDbContext>
     (options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IWalletRepository, WalletRepository>();
+builder.Services.AddScoped<InHistoryRepository, HistoryRepository>();
+builder.Services.AddScoped<ICoinRepository, CoinRepository>();
 
 builder.Services.AddAutoMapper(typeof(ProjectMapping));
 

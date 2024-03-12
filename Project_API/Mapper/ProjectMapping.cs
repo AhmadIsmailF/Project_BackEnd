@@ -15,6 +15,7 @@ namespace Project_API.Mapper
             CreateMap<Wallet, SellDto>().ReverseMap();
             CreateMap<Wallet, ConvertDto>().ReverseMap();
             CreateMap<Wallet, WalletDBDto>().ReverseMap();
+            CreateMap<Wallet, WithdrawDto>().ReverseMap();
         }
     }
 }

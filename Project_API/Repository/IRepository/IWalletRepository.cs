@@ -14,5 +14,7 @@ namespace Project_API.Repository.IRepository
         bool WalletExists(int id);
         Task<bool> CreateWallet(Wallet wallet);
         Task<bool> UpdateWallet(Wallet wallet);
+        ICollection<Wallet> GetWallets();
+        Wallet GetWallet(int walletId);
     }
 }

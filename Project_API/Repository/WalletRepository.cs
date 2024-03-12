@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Project_API.Data;
-using Project_API.Migrations;
 using Project_API.Models;
 using Project_API.Models.Dto;
 using Project_API.Repository.IRepository;
@@ -19,10 +19,16 @@ namespace Project_API.Repository
             _mapper = mapper;
 
         }
+
+        public ICollection<Wallet> GetWallets()
+        {
+            return _db.Wallets.OrderBy(a => a.WalletId).ToList();
+        }
+
         public async Task Buy(int walletId, double amount)
         {
             //var userobj = _mapper.Map<User>(userDto);
-
+            
             var wallet = await _db.Wallets.FirstOrDefaultAsync(u => u.WalletId == walletId);
 
             if (wallet != null)
@@ -30,8 +36,8 @@ namespace Project_API.Repository
                 wallet.Balance += amount;
                 await Save();
             }
-            else
-                throw new ArgumentException("Wallet not found for the user.");
+            //else
+            //    throw new ArgumentException("Wallet not found for the user.");
         }
 
         public async Task Sell(int walletId, double amount)
@@ -61,7 +67,6 @@ namespace Project_API.Repository
             {
                 coinFrom.Balance = coinFrom.Balance - Amount;
                 coinTo.Balance = coinTo.Balance + Amount * 17;
-
             }
 
             if (Coin1Id == 2) 
@@ -78,7 +83,7 @@ namespace Project_API.Repository
         {
             var wallet = await _db.Wallets.ToListAsync();
             var userWallets=wallet.Where(z=>z.UserId == userId).ToList();
-            var stableCoin=userWallets.Where(z=>z.CoinId == 3).FirstOrDefault();
+            var stableCoin=userWallets.Where(z=>z.CoinId == 4).FirstOrDefault();
 
             if (wallet != null)
             {
@@ -93,7 +98,7 @@ namespace Project_API.Repository
         {
             var wallet = await _db.Wallets.ToListAsync();
             var userWallets = wallet.Where(z => z.UserId == userId).ToList();
-            var stableCoin = userWallets.Where(z => z.CoinId == 3).FirstOrDefault();
+            var stableCoin = userWallets.Where(z => z.CoinId == 4).FirstOrDefault();
 
             if (wallet != null)
             {
@@ -126,7 +131,9 @@ namespace Project_API.Repository
             return  await Save();
         }
 
-
-
+        public Wallet GetWallet(int walletId)
+        {
+            return _db.Wallets.FirstOrDefault(a => a.WalletId == walletId);
+        }
     }
 }

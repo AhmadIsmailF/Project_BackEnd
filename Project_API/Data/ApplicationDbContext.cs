@@ -13,5 +13,6 @@ namespace Project_API.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
         public DbSet<Coin> Coins { get; set; }
+        public DbSet<History> Histories { get; set; }
     }
 }

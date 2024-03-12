@@ -15,13 +15,29 @@ namespace Project_API.Controllers
     {
         private readonly IUserRepository _userRepos;
         private readonly IWalletRepository _WalletRepos;
+        private readonly InHistoryRepository _hisRepo;
         private readonly IMapper _mapper;
 
-        public UserController(IUserRepository userRepos, IWalletRepository WalletRepos, IMapper mapper)
+        public UserController(IUserRepository userRepos, IWalletRepository WalletRepos, InHistoryRepository hisRepos, IMapper mapper)
         {
             _userRepos = userRepos;
             _WalletRepos = WalletRepos;
+            _hisRepo = hisRepos;
             _mapper = mapper;
+        }
+
+        [HttpGet("Wallets")]
+        public async Task<IActionResult> GetWallets()
+        {
+            var objList = _userRepos.GetUsers();
+            var objDto = new List<UserDto>();
+
+            foreach (var obj in objList)
+            {
+                objDto.Add(_mapper.Map<UserDto>(obj));
+            }
+
+            return Ok(objDto);
         }
 
         [AllowAnonymous]
@@ -42,17 +58,17 @@ namespace Project_API.Controllers
         public async Task<IActionResult> Register([FromBody] UserDto userDto)
         {
             bool ifUserNmeUnique=false;
-
+            var time =DateTime.Now;
 
             if (_userRepos.IsValidPassword(userDto.Password))
                 ifUserNmeUnique = await _userRepos.IsUniqueUser(userDto.Email);
 
 
 
-            if (!ifUserNmeUnique)
-            {
-                return BadRequest(new { message = " you are already registred" });
-            }
+            //if (!ifUserNmeUnique)
+            //{
+            //    return BadRequest(new { message = " you are already registred" });
+            //}
             var userobj = _mapper.Map<User>(userDto);
 
             var user =await _userRepos.Register(userobj);
@@ -68,7 +84,6 @@ namespace Project_API.Controllers
             {
                 return BadRequest(new { message = "Error while registration" });
             }
-
             return Ok();
         }
     }

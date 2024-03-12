@@ -12,8 +12,8 @@ using Project_API.Data;
 namespace Project_API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240306135321_final")]
-    partial class final
+    [Migration("20240311141916_tt")]
+    partial class tt
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,6 +47,26 @@ namespace Project_API.Migrations
                     b.HasKey("CoinId");
 
                     b.ToTable("Coins");
+                });
+
+            modelBuilder.Entity("Project_API.Models.History", b =>
+                {
+                    b.Property<int>("HistoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HistoryId"));
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("HistoryId");
+
+                    b.ToTable("Histories");
                 });
 
             modelBuilder.Entity("Project_API.Models.User", b =>
@@ -110,8 +130,6 @@ namespace Project_API.Migrations
 
                     b.HasKey("WalletId");
 
-                    b.HasIndex("CoinId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Wallets");
@@ -119,19 +137,11 @@ namespace Project_API.Migrations
 
             modelBuilder.Entity("Project_API.Models.Wallet", b =>
                 {
-                    b.HasOne("Project_API.Models.Coin", "Coin")
-                        .WithMany()
-                        .HasForeignKey("CoinId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Project_API.Models.User", null)
                         .WithMany("wallets")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Coin");
                 });
 
             modelBuilder.Entity("Project_API.Models.User", b =>

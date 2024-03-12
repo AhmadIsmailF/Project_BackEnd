@@ -17,6 +17,19 @@ namespace Project_API.Repository
         private readonly ApplicationDbContext _db;
         private readonly AppSettings _appSettings;
 
+        
+
+        public UserRepository(ApplicationDbContext db, IOptions<AppSettings> appsetting)
+        {
+            _db = db;
+            _appSettings = appsetting.Value;
+        }
+
+        public ICollection<User> GetUsers()
+        {
+            return _db.Users.OrderBy(a => a.UserId).ToList();
+        }
+
         public bool IsValidPassword(string password)
         {
             // Password validation logic here
@@ -24,11 +37,6 @@ namespace Project_API.Repository
             return Regex.IsMatch(password, pattern);
         }
 
-        public UserRepository(ApplicationDbContext db, IOptions<AppSettings> appsetting)
-        {
-            _db = db;
-            _appSettings = appsetting.Value;
-        }
         public async Task<User> Authenticate(string email, string password)
         {
             var user =await _db.Users.SingleOrDefaultAsync(x => x.Email == email && x.Password == password);
